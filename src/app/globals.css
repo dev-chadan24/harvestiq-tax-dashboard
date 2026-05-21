@@ -1,0 +1,155 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+    --radius: 0.75rem;
+
+    /* Financial colors */
+    --profit: 142.1 76.2% 36.3%; /* Green */
+    --profit-bg: 142.5 70.6% 4.5%;
+    --loss: 346.8 77.2% 49.8%; /* Red */
+    --loss-bg: 346.8 77.2% 4.5%;
+    --accent-blue: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    border-color: theme('colors.zinc.900');
+  }
+  body {
+    background-color: #050508; /* Luxury deep charcoal-graphite dark */
+    color: #f4f4f5; /* Zinc 100 */
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom Scrollbar for top-tier fintech analytics screens */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #050508;
+}
+::-webkit-scrollbar-thumb {
+  background: #1c1c24;
+  border-radius: 99px;
+  border: 1px solid #050508;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2d2d3a;
+}
+
+/* Premium Keyframe Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-24px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.12);
+    border-color: rgba(59, 130, 246, 0.18);
+  }
+  50% {
+    box-shadow: 0 0 35px rgba(59, 130, 246, 0.24);
+    border-color: rgba(59, 130, 246, 0.35);
+  }
+}
+
+@keyframes successGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.08);
+    border-color: rgba(16, 185, 129, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 35px rgba(16, 185, 129, 0.22);
+    border-color: rgba(16, 185, 129, 0.32);
+  }
+}
+
+/* Helper Animation classes */
+.animate-fade-in {
+  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-down {
+  animation: slideDownIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.glow-blue {
+  animation: pulseGlow 4s infinite ease-in-out;
+}
+
+.glow-success {
+  animation: successGlow 3s infinite ease-in-out;
+}
+
+/* Elite Glassmorphism Layering */
+.glass-panel {
+  background: rgba(10, 10, 15, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.glass-panel-hover {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-panel-hover:hover {
+  background: rgba(13, 13, 20, 0.85);
+  border-color: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.65);
+}
+
+/* Refined border glows */
+.border-glow-hover {
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+.border-glow-hover:hover {
+  border-color: rgba(59, 130, 246, 0.22);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.08);
+}
