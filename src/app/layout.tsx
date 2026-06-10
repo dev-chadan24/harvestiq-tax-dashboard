@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import { AppProviders } from "@/providers/AppProviders";
 import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -27,6 +28,28 @@ export const metadata: Metadata = {
     "Web3 Analytics",
   ],
   authors: [{ name: "HarvestIQ Team" }],
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://harvestiq.com",
+    siteName: "HarvestIQ",
+    title: "HarvestIQ — Tax Loss Harvesting Dashboard",
+    description: "Optimize your crypto tax liabilities with intelligent tax-loss harvesting insights.",
+    images: [
+      {
+        url: "https://harvestiq.com/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "HarvestIQ Dashboard",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "HarvestIQ — Tax Loss Harvesting Dashboard",
+    description: "Optimize your crypto tax liabilities with intelligent tax-loss harvesting insights.",
+    images: ["https://harvestiq.com/twitter-image.jpg"],
+  },
 };
 
 export default function RootLayout({
@@ -35,11 +58,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark scroll-smooth">
+    <html lang="en" className="dark scroll-smooth" suppressHydrationWarning>
       <body
         className={`${plusJakartaSans.variable} font-sans antialiased bg-[#050508] text-[#f4f4f5]`}
       >
-        {children}
+        <AppProviders>
+          {children}
+        </AppProviders>
       </body>
     </html>
   );

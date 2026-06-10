@@ -9,20 +9,22 @@ import {
   setGainsApiFailure,
 } from "../services/api";
 import { useHarvestState } from "../hooks/useHarvestState";
-import SummaryCards from "../components/cards/SummaryCards";
-import SavingsBanner from "../components/cards/SavingsBanner";
-import HoldingsTable from "../components/table/HoldingsTable";
+import dynamic from 'next/dynamic';
 import Skeleton from "../components/ui/Skeleton";
+
+// Lazy load heavy components for code splitting (P2 Gap)
+const SummaryCards = dynamic(() => import("../components/cards/SummaryCards"));
+const SavingsBanner = dynamic(() => import("../components/cards/SavingsBanner"));
+const HoldingsTable = dynamic(() => import("../components/table/HoldingsTable"));
 import { formatCurrency } from "../utils/formatters";
 import { motion, AnimatePresence } from "framer-motion";
+import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
 import {
   RefreshCw,
   AlertTriangle,
   Settings,
-  Percent,
   Sparkles,
-  User,
-  Heart,
   TrendingDown,
 } from "lucide-react";
 
@@ -159,67 +161,10 @@ export default function Dashboard() {
       <div className="absolute top-[25%] right-[10%] w-[400px] h-[400px] bg-indigo-600/5 rounded-full blur-[110px] pointer-events-none z-0"></div>
       <div className="absolute bottom-[15%] left-[5%] w-[450px] h-[450px] bg-emerald-600/5 rounded-full blur-[120px] pointer-events-none z-0"></div>
 
-      {/* STICKY GLASSMORPHIC HEADER */}
-      <header className="sticky top-0 z-40 w-full border-b border-zinc-800/60 bg-zinc-950/80 backdrop-blur-lg shadow-lg shadow-black/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <motion.div
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ type: "spring", stiffness: 200, damping: 20 }}
-            className="flex items-center gap-3"
-          >
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20 text-white font-black tracking-tighter border border-white/10 relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-              <span className="relative z-10 text-lg">H</span>
-            </div>
-            <div>
-              <span className="font-black text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-zinc-100 to-zinc-300">
-                Harvest
-              </span>
-              <span className="font-extrabold text-lg text-blue-400">IQ</span>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ type: "spring", stiffness: 200, damping: 20 }}
-            className="flex items-center gap-4"
-          >
-            <span className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-zinc-900 border border-zinc-800 text-zinc-400 shadow-inner">
-              <Percent className="w-3.5 h-3.5 text-blue-400" />
-              Tax Year: FY 2026-27
-            </span>
-
-            <button
-              type="button"
-              onClick={() => setShowSimControls(!showSimControls)}
-              className={`p-2 rounded-xl border transition-all duration-300 shadow-inner ${
-                showSimControls
-                  ? "bg-blue-500/20 border-blue-500/30 text-blue-400"
-                  : "bg-zinc-900/60 border-zinc-800 hover:border-zinc-700 text-zinc-400 hover:text-zinc-200"
-              }`}
-              title="Simulate API configurations"
-            >
-              <Settings className="w-4 h-4" />
-            </button>
-
-            <div className="flex items-center gap-3 pl-4 border-l border-zinc-800/80">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-zinc-800 to-zinc-900 border border-zinc-700/80 flex items-center justify-center text-zinc-300 shadow-lg relative overflow-hidden">
-                <User className="w-4.5 h-4.5" />
-              </div>
-              <div className="hidden md:flex flex-col text-left">
-                <span className="text-xs font-bold text-zinc-200 leading-none">
-                  Chandan
-                </span>
-                <span className="text-[10px] font-extrabold tracking-wider text-zinc-500 uppercase mt-0.5">
-                  Portfolio Review
-                </span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </header>
+      <Header 
+        showSimControls={showSimControls} 
+        onSettingsClick={() => setShowSimControls(!showSimControls)} 
+      />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10 z-10 relative">
         {/* SIMULATED API FAILURES CONTROLLER */}
@@ -450,23 +395,7 @@ export default function Dashboard() {
         )}
       </main>
 
-      {/* FOOTER */}
-      <footer className="mt-auto border-t border-zinc-900/80 bg-zinc-950/70 backdrop-blur-md py-6 text-center text-xs text-zinc-500 shadow-inner z-10 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 select-none">
-            <span className="font-black tracking-widest text-[9px] text-zinc-400 bg-zinc-900 border border-zinc-800/80 px-2 py-0.5 rounded">
-              HarvestIQ Ledger System
-            </span>
-            <span className="text-zinc-600">•</span>
-            <span>Premium FinTech Portfolio Review</span>
-          </div>
-          <div className="flex items-center gap-1.5 text-[11px]">
-            <span>Crafted with</span>
-            <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500 animate-pulse" />
-            <span>using Next.js 14, React & Tailwind CSS</span>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
