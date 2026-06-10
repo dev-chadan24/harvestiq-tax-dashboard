@@ -1,0 +1,119 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// NextAuth Next.js models
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  
+  // Stripe Monetization (ready for later)
+  stripeCustomerId       String?   @unique
+  stripeSubscriptionId   String?   @unique
+  stripePriceId          String?
+  stripeCurrentPeriodEnd DateTime?
+  planTier               String    @default("FREE")
+  
+  accounts      Account[]
+  sessions      Session[]
+  taxProfile    TaxProfile?
+  portfolios    Portfolio[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// HarvestIQ Models
+model TaxProfile {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  shortTermRate       Float?   // Override for default brackets
+  longTermRate        Float?   // Override for default brackets
+  baseCurrency        String   @default("USD")
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Portfolio {
+  id          String    @id @default(cuid())
+  userId      String
+  name        String
+  currency    String    @default("USD")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  holdings    Holding[]
+  harvests    Harvest[]
+}
+
+model Holding {
+  id              String    @id @default(cuid())
+  portfolioId     String
+  assetSymbol     String
+  quantity        Float
+  costBasis       Float     // Total cost basis for the holding in portfolio currency
+  acquisitionDate DateTime  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  portfolio       Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+}
+
+model Harvest {
+  id              String    @id @default(cuid())
+  portfolioId     String
+  assetSymbol     String
+  realizedLoss    Float
+  quantitySold    Float
+  salePrice       Float
+  saleDate        DateTime
+  isWashSaleWarn  Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  
+  portfolio       Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+}
